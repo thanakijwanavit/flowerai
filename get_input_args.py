@@ -45,7 +45,7 @@ def get_input_args():
     parser.add_argument('--save_dir', type = str, default = 'saved_classifier/checkpoint.pth',
                     help = 'path to save the trained model')
     # Argument 2: CNN model Architecture
-    parser.add_argument('--arch', type = str, default = 'vgg13', help = 'cnn model architecture')
+    parser.add_argument('--arch', type = str, default = 'vgg16', help = 'cnn model architecture')
     # Argument 3: text file with dog names
     parser.add_argument('--learning_rate', type = float, default = 0.01, help = 'file with the dog names')
     parser.add_argument('--hidden_units', type = int, default = 512, help = 'file with the dog names')
