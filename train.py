@@ -83,11 +83,6 @@ model = choosemodel(in_arg.arch)
 
 
 
-#criterion and optimizer
-
-criterion = nn.NLLLoss()
-# Only train the classifier parameters, feature parameters are frozen
-optimizer = optim.Adam(model.classifier.parameters(), lr=learning_rate)
 
 
 
@@ -141,10 +136,19 @@ print('training with ',device)
 t0=time()
 #model = do_deep_learning(model, trainloader, in_arg.epochs, 40, criterion, optimizer,validloader, device)
 
+#criterion and optimizer
+
+criterion = nn.NLLLoss()
+# Only train the classifier parameters, feature parameters are frozen
+optimizer = optim.Adam(model.classifier.parameters(), lr=learning_rate)
+
 ## test deep learning without external function
 # method for validation
 epochs=in_arg.epochs
 print_every=50
+steps=0
+model.to('cuda')
+
 def validation(model, validloader, criterion):
     valid_loss = 0
     accuracy = 0
@@ -162,8 +166,8 @@ def validation(model, validloader, criterion):
     return valid_loss, accuracy
 
 ## Train the network
-steps=0
-model.to('cuda')
+
+
 for e in range(epochs):
     running_loss = 0
     model.train()
