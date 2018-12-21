@@ -143,7 +143,7 @@ def predict(image_path, model, topk=5):
     probability=torch.exp(probability_output)
     resultdic={'category':[],'probability':[]}
     for i,j in zip(categorynumber[0],probability[0]):
-        category_id=int(idx_to_class[i.item()])
+        category_id=idx_to_class[i.item()]
         resultdic['category'].append(newdict[category_id])
         resultdic['probability'].append(j.item())
     #df=pd.DataFrame(resultdic)
