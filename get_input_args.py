@@ -47,7 +47,7 @@ def get_input_args():
     # Argument 2: CNN model Architecture
     parser.add_argument('--arch', type = str, default = 'vgg16', help = 'cnn model architecture')
     # Argument 3: text file with dog names
-    parser.add_argument('--learning_rate', type = float, default = 0.01, help = 'file with the dog names')
+    parser.add_argument('--learning_rate', type = float, default = 0.001, help = 'file with the dog names')
     parser.add_argument('--hidden_units', type = int, default = 512, help = 'file with the dog names')
     parser.add_argument('--epochs', type = int, default = 20, help = 'file with the dog names')
     parser.add_argument('directory', type = str, default = 'flowers', help = 'test string')
