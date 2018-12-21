@@ -1,0 +1,2 @@
+python predict.py train_test/valid/1/image_07965.jpg saved_classifier/checkpoint.pth
+python train.py train_test --gpu
