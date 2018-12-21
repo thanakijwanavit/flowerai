@@ -95,7 +95,7 @@ for param in model.parameters():
     param.requires_grad = False
 
 dropout=0.2
-'classifier = nn.Sequential(OrderedDict([
+classifier = nn.Sequential(OrderedDict([
                           ('fc1', nn.Linear(25088, in_arg.hidden_units)),
                           ('relu1', nn.ReLU()),
                           ('drop1',nn.Dropout(p=dropout)),
@@ -108,7 +108,7 @@ dropout=0.2
                           ('fc4', nn.Linear(in_arg.hidden_units, 102)),
                           ('output', nn.LogSoftmax(dim=1))
                           ]))
-'
+
 model.classifier = classifier
 
 ### Create cat to name dict
