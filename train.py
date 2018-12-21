@@ -144,6 +144,7 @@ t0=time()
 ## test deep learning without external function
 # method for validation
 epochs=in_arg.epochs
+print_every=50
 def validation(model, validloader, criterion):
     valid_loss = 0
     accuracy = 0
