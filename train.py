@@ -95,7 +95,7 @@ for param in model.parameters():
     param.requires_grad = False
 
 dropout=0.2
-classifier = nn.Sequential(OrderedDict([
+'classifier = nn.Sequential(OrderedDict([
                           ('fc1', nn.Linear(25088, in_arg.hidden_units)),
                           ('relu1', nn.ReLU()),
                           ('drop1',nn.Dropout(p=dropout)),
@@ -108,7 +108,7 @@ classifier = nn.Sequential(OrderedDict([
                           ('fc4', nn.Linear(in_arg.hidden_units, 102)),
                           ('output', nn.LogSoftmax(dim=1))
                           ]))
-
+'
 model.classifier = classifier
 
 ### Create cat to name dict
@@ -134,7 +134,6 @@ device='cpu'if in_arg.gpu==False else 'gpu'
 #### Training
 print('training with ',device)
 t0=time()
-#model = do_deep_learning(model, trainloader, in_arg.epochs, 40, criterion, optimizer,validloader, device)
 
 #criterion and optimizer
 
@@ -148,7 +147,8 @@ epochs=in_arg.epochs
 print_every=50
 steps=0
 model.to('cuda')
-
+model = do_deep_learning(model, trainloader, in_arg.epochs, 40, criterion, optimizer,validloader, device)
+'''
 def validation(model, validloader, criterion):
     valid_loss = 0
     accuracy = 0
@@ -201,7 +201,7 @@ for e in range(epochs):
 
             running_loss = 0
 
-
+'''
 
 
 
