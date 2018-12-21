@@ -46,14 +46,25 @@ data_transforms = transforms.Compose([transforms.RandomRotation(30),
                                        transforms.RandomResizedCrop(244),
                                        transforms.RandomHorizontalFlip(),
                                        transforms.ToTensor(),
-                                       transforms.Normalize([0.5, 0.5, 0.5],
-                                                            [0.5,0.5,0.5])])
+                                       transforms.Normalize([0.485, 0.456, 0.406],
+                                                            [0.229, 0.224, 0.225])])
 
+train_transforms = transforms.Compose([transforms.RandomRotation(30),
+                                       transforms.RandomResizedCrop(224),
+                                       transforms.RandomHorizontalFlip(),
+                                       transforms.ToTensor(),
+                                       transforms.Normalize([0.485, 0.456, 0.406],
+                                                            [0.229, 0.224, 0.225])])
 
+verify_transforms = transforms.Compose([transforms.Resize(256),
+                                      transforms.CenterCrop(224),
+                                      transforms.ToTensor(),
+                                      transforms.Normalize([0.485, 0.456, 0.406],
+                                                           [0.229, 0.224, 0.225])])
 
 # TODO: Load the datasets with ImageFolder
 image_datasets = datasets.ImageFolder(data_dir, transform=data_transforms)
-train_data = datasets.ImageFolder(train_dir, transform=data_transforms)
+train_data = datasets.ImageFolder(train_dir, transform=train_transforms)
 test_data = datasets.ImageFolder(test_dir, transform=data_transforms)
 valid_datasets = datasets.ImageFolder(valid_dir, transform=verify_transforms)
 
