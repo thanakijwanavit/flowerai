@@ -1,4 +1,21 @@
-def do_deep_learning(model, trainloader, epochs, print_every, criterion, optimizer, device='cpu'):
+# method for validation
+def validation(model, validloader, criterion):
+    valid_loss = 0
+    accuracy = 0
+    for images, labels in validloader:
+
+        images, labels = images.to('cuda'), labels.to('cuda')
+
+        output = model.forward(images)
+        valid_loss += criterion(output, labels).item()
+
+        ps = torch.exp(output)
+        equality = (labels.data == ps.max(dim=1)[1])
+        accuracy += equality.type(torch.FloatTensor).mean()
+
+    return valid_loss, accuracy
+
+def do_deep_learning(model, trainloader, epochs, print_every, criterion, optimizer,validloader, device='cpu'):
     epochs = epochs
     print_every = print_every
     steps = 0
@@ -9,6 +26,7 @@ def do_deep_learning(model, trainloader, epochs, print_every, criterion, optimiz
 
         for e in range(epochs):
             running_loss = 0
+            model.train()
             for ii, (inputs, labels) in enumerate(trainloader):
                 steps += 1
 
@@ -25,11 +43,19 @@ def do_deep_learning(model, trainloader, epochs, print_every, criterion, optimiz
                 running_loss += loss.item()
 
                 if steps % print_every == 0:
+                    #to test the model
+                    model.eval()
+                    with torch.no_grad():
+                        valid_loss, valid_accuracy = validation(model, validloader, criterion)
+
+
                     print("Epoch: {}/{}... ".format(e+1, epochs),
-                          "Loss: {:.4f}".format(running_loss/print_every))
+                          "Loss: {:.4f}".format(running_loss/print_every),
+                          "Validation Loss: {:.4f}".format(valid_loss/len(validloader)),
+                          "Validation Accuracy: {:.4f}".format(valid_accuracy/len(validloader)))
 
                     running_loss = 0
-                    
+
     else:
         for e in range(epochs):
             running_loss = 0

@@ -55,10 +55,12 @@ data_transforms = transforms.Compose([transforms.RandomRotation(30),
 image_datasets = datasets.ImageFolder(data_dir, transform=data_transforms)
 train_data = datasets.ImageFolder(train_dir, transform=data_transforms)
 test_data = datasets.ImageFolder(test_dir, transform=data_transforms)
+valid_datasets = datasets.ImageFolder(valid_dir, transform=verify_transforms)
 
 # TODO: Using the image datasets and the trainforms, define the dataloaders
 dataloaders = torch.utils.data.DataLoader(image_datasets, batch_size=32, shuffle=True)
 trainloader = torch.utils.data.DataLoader(train_data, batch_size=32, shuffle=True)
+validloader = torch.utils.data.DataLoader(valid_datasets, batch_size=32)
 testloader = torch.utils.data.DataLoader(test_data, batch_size=32, shuffle=True)
 
 # TODO: Build and train your network
@@ -86,11 +88,18 @@ optimizer = optim.Adam(model.classifier.parameters(), lr=learning_rate)
 for param in model.parameters():
     param.requires_grad = False
 
-
+dropout=0.2
 classifier = nn.Sequential(OrderedDict([
                           ('fc1', nn.Linear(25088, in_arg.hidden_units)),
-                          ('relu', nn.ReLU()),
-                          ('fc2', nn.Linear(in_arg.hidden_units, 102)),
+                          ('relu1', nn.ReLU()),
+                          ('drop1',nn.Dropout(p=dropout)),
+                          ('fc2', nn.Linear(in_arg.hidden_units, in_arg.hidden_units)),
+                          ('relu2', nn.ReLU()),
+                          ('drop2',nn.Dropout(p=dropout)),
+                          ('fc3', nn.Linear(in_arg.hidden_units, in_arg.hidden_units)),
+                          ('relu3', nn.ReLU()),
+                          ('drop3',nn.Dropout(p=dropout)),
+                          ('fc4', nn.Linear(in_arg.hidden_units, 102)),
                           ('output', nn.LogSoftmax(dim=1))
                           ]))
 
@@ -119,7 +128,7 @@ device='cpu'if in_arg.gpu==False else 'gpu'
 #### Training
 print('training with ',device)
 t0=time()
-model = do_deep_learning(model, trainloader, in_arg.epochs, 40, criterion, optimizer, device)
+model = do_deep_learning(model, trainloader, in_arg.epochs, 40, criterion, optimizer,validloader, device)
 print('the model took',time()-t0,'seconds to train')
 pp.pprint(model.__dict__)
 
