@@ -35,6 +35,7 @@ def load_checkpoint(filepath):
     model=choosemodel(checkpoint['arch'])
     model.classifier = checkpoint['classifier']
     model.load_state_dict(checkpoint['state_dict'])
+    model.class_to_idx = checkpoint['class_to_idx']
     newdict=checkpoint['cat_to_name_dict']
     #return {'model':model,'newdict':newdict}
     return [model,newdict]
@@ -71,7 +72,7 @@ def process_image(image):
     bottom = (height + new_height)/2
     croppedIm=pilim.crop((left, top, right, bottom))
     numpyim= np.array(croppedIm)/255
-    
+
     mean = numpyim.mean(axis=(0,1))
     std= numpyim.std(axis=(0,1))
     nmean = np.array([0.485, 0.456, 0.406])
@@ -92,16 +93,16 @@ def imshow(image,df, ax=None, title=None):
     # PyTorch tensors assume the color channel is the first dimension
     # but matplotlib assumes is the third dimension
     image = image.transpose((1, 2, 0))
-    
-    
+
+
     # Undo preprocessing
     mean = np.array([0.485, 0.456, 0.406])
     std = np.array([0.229, 0.224, 0.225])
     image = std * image + mean
-    
+
     # Image needs to be clipped between 0 and 1 or it looks like noise when displayed
     image = np.clip(image, 0, 1)
-    
+
     ax.imshow(image)
     #sb.set(rc={'figure.figsize':(11.7,8.27)})
     sb.barplot(data=df,y='category',x='probability',ax=ax1)
@@ -110,9 +111,9 @@ def imshow(image,df, ax=None, title=None):
     ax.axes.get_yaxis().set_visible(False)
     ax.set_title(df['category'].iloc[0])
     return ax
-    
+
 def predict(image_path, model, topk=5):
-    
+
     im=Image.open(image_path)
     im=process_image(im)
     imagetensor=torch.from_numpy(im).float()
@@ -130,12 +131,19 @@ def predict(image_path, model, topk=5):
         output=model(unsqueezedtensor.cuda())
         print('using cuda')
     # TODO: Implement the code to predict the class from an image file
-    
+    ## get idx to class  dictionary
+    idx_to_class = {val: key for key, val in model.class_to_idx.items()}
+
+
+
+
+
+
     probability_output,categorynumber=torch.topk(output.data,topk,1)
     probability=torch.exp(probability_output)
     resultdic={'category':[],'probability':[]}
     for i,j in zip(categorynumber[0],probability[0]):
-        resultdic['category'].append(newdict[i.item()+1])
+        resultdic['category'].append(newdict[idx_to_class[i.item()]])
         resultdic['probability'].append(j.item())
     #df=pd.DataFrame(resultdic)
     #print(df.to_string())
@@ -152,4 +160,3 @@ def display(image_path, model, topk=5):
 
 topk=in_arg.top_k
 display(in_arg.image_dir,model,topk)
-    
