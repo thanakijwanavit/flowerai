@@ -129,7 +129,7 @@ save_name=in_arg.save_dir
 print('save model as', save_name)
 # TODO: Save the checkpoint
 #torch.save(model.state_dict(), save_name)
-model.class_to_idx = train_datasets.class_to_idx
+model.class_to_idx = train_data.class_to_idx
 checkpoint = {'classifier': model.classifier,
               'state_dict': model.state_dict(),
               'cat_to_name_dict':cat_to_name_dict,
