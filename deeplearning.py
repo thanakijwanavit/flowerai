@@ -1,3 +1,6 @@
+
+import torch
+
 # method for validation
 def validation(model, validloader, criterion):
     valid_loss = 0
