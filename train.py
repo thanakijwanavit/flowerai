@@ -46,7 +46,7 @@ data_transforms = transforms.Compose([transforms.RandomRotation(30),
                                        transforms.RandomResizedCrop(244),
                                        transforms.RandomHorizontalFlip(),
                                        transforms.ToTensor(),
-                                       transforms.Normalize([0.5, 0.5, 0.5], 
+                                       transforms.Normalize([0.5, 0.5, 0.5],
                                                             [0.5,0.5,0.5])])
 
 
@@ -93,7 +93,7 @@ classifier = nn.Sequential(OrderedDict([
                           ('fc2', nn.Linear(in_arg.hidden_units, 102)),
                           ('output', nn.LogSoftmax(dim=1))
                           ]))
-    
+
 model.classifier = classifier
 
 ### Create cat to name dict
@@ -127,12 +127,13 @@ pp.pprint(model.__dict__)
 save_name=in_arg.save_dir
 ##### save model
 print('save model as', save_name)
-# TODO: Save the checkpoint 
+# TODO: Save the checkpoint
 #torch.save(model.state_dict(), save_name)
-
+model.class_to_idx = train_datasets.class_to_idx
 checkpoint = {'classifier': model.classifier,
               'state_dict': model.state_dict(),
               'cat_to_name_dict':cat_to_name_dict,
+              'class_to_idx':model.class_to_idx,
               'arch':in_arg.arch}
 
 torch.save(checkpoint, in_arg.save_dir)
