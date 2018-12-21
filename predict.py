@@ -39,10 +39,10 @@ def load_checkpoint(filepath):
     newdict=checkpoint['cat_to_name_dict']
     #return {'model':model,'newdict':newdict}
     return [model,newdict]
-print('model class to idx is ',model.class_to_idx)
+
 #### load model and newdict
 model,newdict = load_checkpoint(checkpoint_path)#['model','newdict']
-
+print('model class to idx is ',model.class_to_idx)
 #print(model.__dict__)
 
 ##### check if alternative dict is input, in that case, assign to alternative dict
